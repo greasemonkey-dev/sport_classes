@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Eli Copter",
+    "sports": ["weight lifting", "yoga"],
+    "availableDates": [
+      {"from": 1645983600000, "to": 1645994400000},
+      {"from": 1646052000000, "to": 1646082600000}
+    ],
+    "score": 9.3
+  },
+  {
+    "name": "Ava Runner",
+    "sports": ["running", "crossfit"],
+    "availableDates": [
+      {"from": 1645983600000, "to": 1645994400000},
+      {"from": 1646052000000, "to": 1646082600000}
+    ],
+    "score": 8.7
+  },
+  {
+    "name": "Max Flex",
+    "sports": ["bodybuilding", "pilates"],
+    "availableDates": [
+      {"from": 1645983600000, "to": 1645994400000},
+      {"from": 1646052000000, "to": 1646082600000}
+    ],
+    "score": 9.1
+  }
+]
