@@ -1,6 +1,7 @@
-package awesomeProject
+package main
 
 import (
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
@@ -8,8 +9,15 @@ import (
 )
 
 func main() {
-
+	// Print current working directory
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("Error getting working directory: ", err)
+	}
+	log.Println("Current working directory:", wd)
 	// Retrieve the port from the environment variables
+	err = godotenv.Load()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("PORT not found in .env file")
@@ -20,7 +28,7 @@ func main() {
 
 	// Start the HTTP server
 	log.Printf("Server is running on port %s...\n", port)
-	err := http.ListenAndServe(":"+port, nil)
+	err = http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		log.Fatal("Error starting the server: ", err)
 	}
