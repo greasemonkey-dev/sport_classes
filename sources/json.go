@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"sort"
 	"sport_classes/entities"
 )
@@ -12,7 +11,7 @@ import (
 // JSONClient is a type that implements DataClient for JSON sources
 type JSONClient struct {
 	filePath    string
-	data        []entities.SportInstructor // Assuming SportInstructor is defined in your entities package
+	data        []entities.SportInstructor
 	initialized bool
 }
 
@@ -35,10 +34,19 @@ func (c *JSONClient) GetSportClasses() ([]string, error) {
 		}
 	}
 
-	// Extract class names
-	var classNames []string
+	uniqueClassNames := make(map[string]struct{})
+
+	// Extract and store unique class names
 	for _, instructor := range c.data {
-		classNames = append(classNames, instructor.Name)
+		for _, sport := range instructor.Sports {
+			uniqueClassNames[sport] = struct{}{}
+		}
+	}
+
+	// Convert map keys to slice
+	var classNames []string
+	for className := range uniqueClassNames {
+		classNames = append(classNames, className)
 	}
 
 	return classNames, nil
@@ -74,7 +82,7 @@ func (c *JSONClient) FilterByDateRange(sport string, minScore float64, from int6
 	for _, instructor := range c.data {
 		if containsSport(instructor.Sports, sport) && instructor.Score >= minScore {
 			for _, dateRange := range instructor.AvailableDates {
-				if dateRange.From >= from {
+				if dateRange.From <= from && dateRange.To > from {
 					filteredInstructors = append(filteredInstructors, instructor)
 					break
 				}
@@ -104,23 +112,4 @@ func containsSport(sports []string, targetSport string) bool {
 		}
 	}
 	return false
-}
-
-// Helper function to read file content
-func readFile(filePath string) (string, error) {
-	// Open the file with read-only permissions
-	file, err := os.Open(filePath)
-	if err != nil {
-		return "", fmt.Errorf("error opening file: %w", err)
-	}
-	defer file.Close() // Ensure file is closed even if errors occur
-
-	// Read all contents of the file into a byte slice
-	content, err := ioutil.ReadAll(file)
-	if err != nil {
-		return "", fmt.Errorf("error reading file: %w", err)
-	}
-
-	// Return the content as a string
-	return string(content), nil
 }
